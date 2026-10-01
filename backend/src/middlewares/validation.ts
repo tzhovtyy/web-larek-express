@@ -32,6 +32,46 @@ export const validateProductBody = celebrate({
   }),
 });
 
+export const validateProductUpdateBody = celebrate({
+  [Segments.BODY]: Joi.object()
+    .keys({
+      title: Joi.string().min(2).max(30).messages({
+        'string.empty': 'Поле "title" должно быть заполнено',
+        'string.min': 'Минимальная длина поля "title" - 2',
+        'string.max': 'Максимальная длина поля "title" - 30',
+      }),
+      image: Joi.object().keys({
+        fileName: Joi.string().required().messages({
+          'string.empty': 'Поле "image.fileName" должно быть заполнено',
+          'any.required': 'Поле "image.fileName" должно быть заполнено',
+        }),
+        originalName: Joi.string().required().messages({
+          'string.empty': 'Поле "image.originalName" должно быть заполнено',
+          'any.required': 'Поле "image.originalName" должно быть заполнено',
+        }),
+      }),
+      category: Joi.string().messages({
+        'string.empty': 'Поле "category" должно быть заполнено',
+      }),
+      description: Joi.string().allow(null, ''),
+      price: Joi.number().allow(null),
+    })
+    .min(1)
+    .messages({
+      'object.min': 'Необходимо передать хотя бы одно поле для обновления',
+    }),
+});
+
+export const validateProductId = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    productId: Joi.string().required().hex().length(24).messages({
+      'string.hex': 'Передан некорректный _id товара',
+      'string.length': 'Передан некорректный _id товара',
+      'any.required': 'Передан некорректный _id товара',
+    }),
+  }),
+});
+
 export const validateOrderBody = celebrate({
   [Segments.BODY]: Joi.object().keys({
     payment: Joi.string().required().valid('card', 'online').messages({

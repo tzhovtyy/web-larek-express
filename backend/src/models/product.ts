@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import { removeImage } from '../utils/files';
 
 export interface IProductImage {
   fileName: string;
@@ -45,6 +46,22 @@ const productSchema = new Schema<IProduct>(
     },
   },
   { versionKey: false },
+);
+
+productSchema.post('findOneAndDelete', async (doc: IProduct | null) => {
+  if (doc?.image?.fileName) {
+    await removeImage(doc.image.fileName).catch(() => {});
+  }
+});
+
+productSchema.post(
+  'deleteOne',
+  { document: true, query: false },
+  async function removeProductImage() {
+    if (this.image?.fileName) {
+      await removeImage(this.image.fileName).catch(() => {});
+    }
+  },
 );
 
 export default mongoose.model<IProduct>('product', productSchema);

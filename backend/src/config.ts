@@ -12,6 +12,17 @@ export const { ORIGIN_ALLOW = 'http://localhost:5173' } = process.env;
 export const { AUTH_REFRESH_TOKEN_EXPIRY = '7d' } = process.env;
 export const { AUTH_ACCESS_TOKEN_EXPIRY = '10m' } = process.env;
 
+export const MAX_FILE_SIZE = 10 * 1024 * 1024;
+export const MAX_FILE_SIZE_MB = MAX_FILE_SIZE / (1024 * 1024);
+
+export const ALLOWED_FILE_TYPES: Record<string, string> = {
+  'image/png': '.png',
+  'image/jpg': '.jpg',
+  'image/jpeg': '.jpg',
+  'image/gif': '.gif',
+  'image/svg+xml': '.svg',
+};
+
 export const ACCESS_TOKEN = {
   secret: process.env.AUTH_ACCESS_TOKEN_SECRET || 'dev-access-token-secret',
   expiry: AUTH_ACCESS_TOKEN_EXPIRY as StringValue,

@@ -8,6 +8,7 @@ import { DB_ADDRESS, ORIGIN_ALLOW, PORT } from './config';
 import errorHandler from './middlewares/error-handler';
 import { errorLogger, requestLogger } from './middlewares/logger';
 import routes from './routes';
+import scheduleClearTempDir from './utils/clear-temp';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(errorHandler);
 
 const connect = async () => {
   await mongoose.connect(DB_ADDRESS);
+  scheduleClearTempDir();
   app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
   });
