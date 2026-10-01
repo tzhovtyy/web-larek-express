@@ -1,6 +1,9 @@
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
+import path from 'path';
+import routes from './routes';
 
 dotenv.config();
 
@@ -8,7 +11,10 @@ const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/weblarek' } = proce
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(routes);
 
 const connect = async () => {
   await mongoose.connect(DB_ADDRESS);
