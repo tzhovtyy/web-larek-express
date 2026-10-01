@@ -1,4 +1,3 @@
-import { errors } from 'celebrate';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
@@ -19,7 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(requestLogger);
 app.use(routes);
 app.use(errorLogger);
-app.use(errors());
 app.use(errorHandler);
 
 const connect = async () => {

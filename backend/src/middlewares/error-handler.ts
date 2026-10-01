@@ -1,3 +1,4 @@
+import { isCelebrateError } from 'celebrate';
 import { NextFunction, Request, Response } from 'express';
 import { MulterError } from 'multer';
 import { MAX_FILE_SIZE_MB } from '../config';
@@ -13,6 +14,12 @@ const multerMessages: Record<string, string> = {
 };
 
 const errorHandler = (err: IHttpError, _req: Request, res: Response, _next: NextFunction) => {
+  if (isCelebrateError(err)) {
+    const [details] = [...err.details.values()];
+    res.status(400).send({ message: details.message });
+    return;
+  }
+
   if (err instanceof MulterError) {
     res.status(400).send({ message: multerMessages[err.code] || 'Не удалось загрузить файл' });
     return;
