@@ -1,16 +1,18 @@
 import { errors } from 'celebrate';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
-import { DB_ADDRESS, PORT } from './config';
+import { DB_ADDRESS, ORIGIN_ALLOW, PORT } from './config';
 import errorHandler from './middlewares/error-handler';
 import { errorLogger, requestLogger } from './middlewares/logger';
 import routes from './routes';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: ORIGIN_ALLOW, credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(requestLogger);

@@ -62,3 +62,37 @@ export const validateOrderBody = celebrate({
     }),
   }),
 });
+
+export const validateRegisterBody = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().min(2).max(30).messages({
+      'string.empty': 'Поле "name" должно быть заполнено',
+      'string.min': 'Минимальная длина поля "name" - 2',
+      'string.max': 'Максимальная длина поля "name" - 30',
+    }),
+    email: Joi.string().required().email().messages({
+      'string.empty': 'Поле "email" должно быть заполнено',
+      'string.email': 'Поле "email" должно быть валидным email',
+      'any.required': 'Поле "email" должно быть заполнено',
+    }),
+    password: Joi.string().required().min(6).messages({
+      'string.empty': 'Поле "password" должно быть заполнено',
+      'string.min': 'Минимальная длина поля "password" - 6',
+      'any.required': 'Поле "password" должно быть заполнено',
+    }),
+  }),
+});
+
+export const validateLoginBody = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().required().email().messages({
+      'string.empty': 'Поле "email" должно быть заполнено',
+      'string.email': 'Поле "email" должно быть валидным email',
+      'any.required': 'Поле "email" должно быть заполнено',
+    }),
+    password: Joi.string().required().messages({
+      'string.empty': 'Поле "password" должно быть заполнено',
+      'any.required': 'Поле "password" должно быть заполнено',
+    }),
+  }),
+});
