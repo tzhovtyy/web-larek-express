@@ -22,7 +22,12 @@ const exists = (target: string) =>
 
 export const ensureTempDir = () => fs.mkdir(TEMP_DIR, { recursive: true });
 
-export const moveImageFromTemp = async (fileName: string) => {
+export interface IMovedImage {
+  fileName: string;
+  moved: boolean;
+}
+
+export const moveImageFromTemp = async (fileName: string): Promise<IMovedImage> => {
   const name = normalizeFileName(fileName);
 
   if (!name) {
@@ -34,7 +39,7 @@ export const moveImageFromTemp = async (fileName: string) => {
 
   if (!(await exists(tempPath))) {
     if (await exists(uploadPath)) {
-      return toPublicPath(name);
+      return { fileName: toPublicPath(name), moved: false };
     }
 
     throw new BadRequestError('Загруженный файл не найден во временной директории');
@@ -43,7 +48,7 @@ export const moveImageFromTemp = async (fileName: string) => {
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
   await fs.rename(tempPath, uploadPath);
 
-  return toPublicPath(name);
+  return { fileName: toPublicPath(name), moved: true };
 };
 
 export const removeImage = async (fileName: string) => {

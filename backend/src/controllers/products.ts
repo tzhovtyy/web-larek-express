@@ -29,14 +29,18 @@ export const getProducts = async (_req: Request, res: Response, next: NextFuncti
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   const { title, image, category, description, price } = req.body;
-  let movedFileName: string | null = null;
+  // prevent rolling back an unrelared file
+  let rollbackFileName: string | null = null;
 
   try {
-    movedFileName = await moveImageFromTemp(image.fileName);
+    const { fileName, moved } = await moveImageFromTemp(image.fileName);
+    if (moved) {
+      rollbackFileName = fileName;
+    }
 
     const product = await Product.create({
       title,
-      image: { fileName: movedFileName, originalName: image.originalName },
+      image: { fileName, originalName: image.originalName },
       category,
       description,
       price,
@@ -44,8 +48,8 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 
     return res.status(201).send(product);
   } catch (error) {
-    if (movedFileName) {
-      await removeImage(movedFileName).catch(() => {});
+    if (rollbackFileName) {
+      await removeImage(rollbackFileName).catch(() => {});
     }
 
     return handleProductError(error, next);
@@ -55,7 +59,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
   const { productId } = req.params;
   const { image, ...rest } = req.body;
-  let movedFileName: string | null = null;
+  let rollbackFileName: string | null = null;
 
   try {
     const update: Record<string, unknown> = { ...rest };
@@ -63,10 +67,13 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
 
     if (image) {
       const previous = await Product.findById(productId).lean();
-      movedFileName = await moveImageFromTemp(image.fileName);
-      update.image = { fileName: movedFileName, originalName: image.originalName };
+      const { fileName, moved } = await moveImageFromTemp(image.fileName);
+      if (moved) {
+        rollbackFileName = fileName;
+      }
+      update.image = { fileName, originalName: image.originalName };
 
-      if (previous?.image?.fileName && previous.image.fileName !== movedFileName) {
+      if (previous?.image?.fileName && previous.image.fileName !== fileName) {
         replacedFileName = previous.image.fileName;
       }
     }
@@ -86,8 +93,8 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
 
     return res.send(product);
   } catch (error) {
-    if (movedFileName) {
-      await removeImage(movedFileName).catch(() => {});
+    if (rollbackFileName) {
+      await removeImage(rollbackFileName).catch(() => {});
     }
 
     return handleProductError(error, next);
