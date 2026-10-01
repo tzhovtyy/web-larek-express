@@ -111,6 +111,6 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
 
     return res.send(product);
   } catch (error) {
-    return handleProductError(error, next);
+    return next(error);
   }
 };

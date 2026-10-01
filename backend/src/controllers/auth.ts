@@ -92,16 +92,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const { refreshToken, userId } = verifyRefreshTokenFromCookies(req);
 
-    if (!Types.ObjectId.isValid(userId)) {
-      throw new BadRequestError('Передан невалидный _id пользователя');
-    }
-
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new NotFoundError('Пользователь не найден');
-    }
-
-    await user.updateOne({ $pull: { tokens: { token: refreshToken } } });
+    await User.updateOne({ _id: userId }, { $pull: { tokens: { token: refreshToken } } });
 
     const { maxAge: _maxAge, ...clearOptions } = REFRESH_TOKEN.cookie.options;
     res.clearCookie(REFRESH_TOKEN.cookie.name, clearOptions);
