@@ -5,6 +5,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
 import errorHandler from './middlewares/error-handler';
+import { errorLogger, requestLogger } from './middlewares/logger';
 import routes from './routes';
 
 dotenv.config();
@@ -16,7 +17,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(requestLogger);
 app.use(routes);
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
