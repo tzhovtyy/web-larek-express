@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import NotFoundError from '../errors/not-found-error';
-import orderRouter from './orders';
-import productRouter from './products';
+import orderRouter from './order';
+import productRouter from './product';
 
 const router = Router();
 
