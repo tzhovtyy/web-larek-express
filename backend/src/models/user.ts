@@ -51,6 +51,8 @@ const userSchema = new Schema<IUser, IUserModel, IUserMethods>(
       type: String,
       unique: true,
       required: [true, 'Поле "email" должно быть заполнено'],
+      minlength: [5, 'Минимальная длина поля "email" - 5'],
+      maxlength: [254, 'Максимальная длина поля "email" - 254'],
       validate: {
         validator: (value: string) => validator.isEmail(value),
         message: 'Поле "email" должно быть валидным email',

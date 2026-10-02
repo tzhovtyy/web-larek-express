@@ -10,12 +10,16 @@ export const validateProductBody = celebrate({
     }),
     image: Joi.object()
       .keys({
-        fileName: Joi.string().required().messages({
+        fileName: Joi.string().required().min(2).max(255).messages({
           'string.empty': 'Поле "image.fileName" должно быть заполнено',
+          'string.min': 'Минимальная длина поля "image.fileName" - 2',
+          'string.max': 'Максимальная длина поля "image.fileName" - 255',
           'any.required': 'Поле "image.fileName" должно быть заполнено',
         }),
-        originalName: Joi.string().required().messages({
+        originalName: Joi.string().required().min(2).max(255).messages({
           'string.empty': 'Поле "image.originalName" должно быть заполнено',
+          'string.min': 'Минимальная длина поля "image.originalName" - 2',
+          'string.max': 'Максимальная длина поля "image.originalName" - 255',
           'any.required': 'Поле "image.originalName" должно быть заполнено',
         }),
       })
@@ -23,11 +27,17 @@ export const validateProductBody = celebrate({
       .messages({
         'any.required': 'Поле "image" должно быть заполнено',
       }),
-    category: Joi.string().required().messages({
+    category: Joi.string().required().min(2).max(30).messages({
       'string.empty': 'Поле "category" должно быть заполнено',
+      'string.min': 'Минимальная длина поля "category" - 2',
+      'string.max': 'Максимальная длина поля "category" - 30',
       'any.required': 'Поле "category" должно быть заполнено',
     }),
-    description: Joi.string().allow(null, ''),
+    description: Joi.string().min(2).max(1000).allow(null).messages({
+      'string.empty': 'Поле "description" должно быть заполнено',
+      'string.min': 'Минимальная длина поля "description" - 2',
+      'string.max': 'Максимальная длина поля "description" - 1000',
+    }),
     price: Joi.number().allow(null).default(null),
   }),
 });
@@ -41,19 +51,29 @@ export const validateProductUpdateBody = celebrate({
         'string.max': 'Максимальная длина поля "title" - 30',
       }),
       image: Joi.object().keys({
-        fileName: Joi.string().required().messages({
+        fileName: Joi.string().required().min(2).max(255).messages({
           'string.empty': 'Поле "image.fileName" должно быть заполнено',
+          'string.min': 'Минимальная длина поля "image.fileName" - 2',
+          'string.max': 'Максимальная длина поля "image.fileName" - 255',
           'any.required': 'Поле "image.fileName" должно быть заполнено',
         }),
-        originalName: Joi.string().required().messages({
+        originalName: Joi.string().required().min(2).max(255).messages({
           'string.empty': 'Поле "image.originalName" должно быть заполнено',
+          'string.min': 'Минимальная длина поля "image.originalName" - 2',
+          'string.max': 'Максимальная длина поля "image.originalName" - 255',
           'any.required': 'Поле "image.originalName" должно быть заполнено',
         }),
       }),
-      category: Joi.string().messages({
+      category: Joi.string().min(2).max(30).messages({
         'string.empty': 'Поле "category" должно быть заполнено',
+        'string.min': 'Минимальная длина поля "category" - 2',
+        'string.max': 'Максимальная длина поля "category" - 30',
       }),
-      description: Joi.string().allow(null, ''),
+      description: Joi.string().min(2).max(1000).allow(null).messages({
+        'string.empty': 'Поле "description" должно быть заполнено',
+        'string.min': 'Минимальная длина поля "description" - 2',
+        'string.max': 'Максимальная длина поля "description" - 1000',
+      }),
       price: Joi.number().allow(null),
     })
     .min(1)
@@ -110,9 +130,11 @@ export const validateRegisterBody = celebrate({
       'string.min': 'Минимальная длина поля "name" - 2',
       'string.max': 'Максимальная длина поля "name" - 30',
     }),
-    email: Joi.string().required().email().messages({
+    email: Joi.string().required().email().min(5).max(254).messages({
       'string.empty': 'Поле "email" должно быть заполнено',
       'string.email': 'Поле "email" должно быть валидным email',
+      'string.min': 'Минимальная длина поля "email" - 5',
+      'string.max': 'Максимальная длина поля "email" - 254',
       'any.required': 'Поле "email" должно быть заполнено',
     }),
     password: Joi.string().required().min(6).messages({
