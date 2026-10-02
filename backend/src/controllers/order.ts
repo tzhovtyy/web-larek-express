@@ -1,11 +1,10 @@
-/* eslint-disable import/prefer-default-export */
 import { faker } from '@faker-js/faker';
 import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import BadRequestError from '../errors/bad-request-error';
 import Product from '../models/product';
 
-export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { total, items } = req.body;
 
@@ -34,3 +33,5 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     return next(error);
   }
 };
+
+export default createOrder;
