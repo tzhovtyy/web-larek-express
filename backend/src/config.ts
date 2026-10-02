@@ -4,6 +4,16 @@ import ms, { StringValue } from 'ms';
 
 dotenv.config();
 
+const requireEnv = (name: string) => {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`Переменная окружения ${name} не задана`);
+  }
+
+  return value;
+};
+
 export const { PORT = 3000 } = process.env;
 export const { DB_ADDRESS = 'mongodb://127.0.0.1:27017/weblarek' } = process.env;
 export const { UPLOAD_PATH = 'images' } = process.env;
@@ -24,12 +34,12 @@ export const ALLOWED_FILE_TYPES: Record<string, string> = {
 };
 
 export const ACCESS_TOKEN = {
-  secret: process.env.AUTH_ACCESS_TOKEN_SECRET || 'dev-access-token-secret',
+  secret: requireEnv('AUTH_ACCESS_TOKEN_SECRET'),
   expiry: AUTH_ACCESS_TOKEN_EXPIRY as StringValue,
 };
 
 export const REFRESH_TOKEN = {
-  secret: process.env.AUTH_REFRESH_TOKEN_SECRET || 'dev-refresh-token-secret',
+  secret: requireEnv('AUTH_REFRESH_TOKEN_SECRET'),
   expiry: AUTH_REFRESH_TOKEN_EXPIRY as StringValue,
   cookie: {
     name: 'refreshToken',
