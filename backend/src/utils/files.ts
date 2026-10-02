@@ -38,11 +38,7 @@ export const moveImageFromTemp = async (fileName: string): Promise<IMovedImage> 
   const uploadPath = path.join(UPLOAD_DIR, name);
 
   if (!(await exists(tempPath))) {
-    if (await exists(uploadPath)) {
-      return { fileName: toPublicPath(name), moved: false };
-    }
-
-    throw new BadRequestError('Загруженный файл не найден во временной директории');
+    return { fileName: toPublicPath(name), moved: false };
   }
 
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
